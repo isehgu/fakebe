@@ -12,9 +12,13 @@ app.listen(port, () => {
     console.log(`Webserver is listening on ${port}`);
 });
 
+app.use((req, res, next) => {
+    setCORSHeaders(res);
+    next();
+})
+
 app.all('/metrics/find', (req, res) => {
     console.log('Got metric request')
-    setCORSHeaders(res);
     var response = [
         { leaf: 1, text: '1st metric'},
         { leaf: 2, text: '2nd metric'},
@@ -24,7 +28,6 @@ app.all('/metrics/find', (req, res) => {
 })
 
 app.post('/render', (req, res) => {
-    setCORSHeaders(res);
     console.log("Got render request");
     console.log(req.body);
     var re = /-([0-9])[m]/i;
