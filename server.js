@@ -30,19 +30,22 @@ app.all('/metrics/find', (req, res) => {
 app.post('/render', (req, res) => {
     console.log("Got render request");
     console.log(req.body);
+    //
     var re = /-([0-9])[m]/i;
-    var now = Math.floor(Date.now()/1000);
+    var now = Math.floor(Date.now()/1000); // Now is in seconds
     // { target: 'group(1st metric, group(1st metric, #A, #B), #B)',
     //   from: '-1s',
     //   until: 'now',
     //   format: 'json',
     //   maxDataPoints: '1321' }
-    const from = now - (req.body.from.match(re)[1] * 60);
+    const from = now-(req.body.from.match(re)[1] * 60); // From is now - the specified min
     console.log(from);
     const diff = now - from
     // const interval = Math.floor(diff/10000);
     console.log("diff ", diff);
     // console.log("interval ", interval);
+
+    // Generating data per second
     var data = _.range(from, now).map((time) => {
         return [Math.floor(Math.random()*10), time];
     })
